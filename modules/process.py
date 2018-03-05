@@ -10,13 +10,23 @@ class Event:
         return(self.name)
 
     def has_sender(self):
-        return(self.sender_is)
+        if self.sender_is != None:
+            return True
+        else:
+            return False
+
+    def sender_event(self):
+        return self.sender_is
 
     def has_time_stamp(self):
         return(self.time_stamp)
 
+    def set_time_stamp(self,time):
+        self.time_stamp = time
     def has_order(self):
         return(self.order)
+
+
 class Process(Event):
     def __init__(self,name=None,events=[],clock=0):
         self.name = name
@@ -32,9 +42,11 @@ class Process(Event):
     def process_name(self):
         print(self.name)
 
-    def search_event(self,event):
-        if event in self.events:
-            return True
+    def get_time(self):
+        return self.clock
+
+    def set_time(self,time):
+        self.clock = time
     def display_events(self):
         for event in self.events:
             print(event.name)

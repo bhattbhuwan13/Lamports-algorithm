@@ -4,8 +4,8 @@ from modules.process import Event,Process
 
 e1 = Event("e1",1,None)
 e2 = Event("e2",2,None)
-e3 = Event("e3",3,None)
-e4 = Event("e4",4,e2)
+e3 = Event("e3",4,None)
+e4 = Event("e4",3,e2)
 e5 = Event("e5",5,None)
 e6 = Event("e6",6,None)
 e7 = Event("e7",7,e6)
@@ -28,11 +28,49 @@ def lamport(all_processes):
         for event in process.events:
             all_events.append(event)
 
-    print("Before sorting")
-    [print(event.name) for event in all_events]
 
-    print("After sorting")
     new_events = sorted(all_events, key=lambda event: event.has_order())
+
     for event in new_events:
-        print(event.name)
+        # print(event)
+        if event.has_sender():
+            for process in all_processes:
+                if event in process.events:
+                    current_time_for_receiving_event = process.get_time()
+                    # print(current_time_for_receiving_event)
+                    break
+            # print("receiving event")
+            for process in all_processes:
+                # print(event.sender_event())
+                if event.sender_event() in process.events:
+                    # print("The process is " + str(process))
+                    current_time_for_sending_event = process.get_time()
+                    break
+
+            new_time = max(current_time_for_sending_event,
+                           current_time_for_receiving_event
+                          ) + 1
+
+            for process in all_processes:
+                if event in process.events:
+                    process.set_time(new_time)
+                    break
+
+            event.set_time_stamp(new_time)
+
+        else:
+            for process in all_processes:
+                if event in process.events:
+                    current_time_for_receiving_event = process.get_time()
+
+            new_time = current_time_for_receiving_event + 1
+
+            for process in all_processes:
+                if event in process.events:
+                    process.set_time(new_time)
+
+            event.set_time_stamp(new_time)
+
+    for event in new_events:
+        print(str(event.name) + " " + str(event.order) + " " + str(event.time_stamp))
 lamport([p1,p2,p3])
