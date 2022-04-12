@@ -10,10 +10,7 @@ class Event:
         return(self.name)
 
     def has_sender(self):
-        if self.sender_is != None:
-            return True
-        else:
-            return False
+        return self.sender_is != None
 
     def sender_event(self):
         return self.sender_is

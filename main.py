@@ -25,10 +25,7 @@ p3 = Process("P3",[e7,e8,e9],0)
 def lamport(all_processes):
     all_events = []
     for process in all_processes:
-        for event in process.events:
-            all_events.append(event)
-
-
+        all_events.extend(iter(process.events))
     new_events = sorted(all_events, key=lambda event: event.has_order())
 
     for event in new_events:
@@ -56,8 +53,6 @@ def lamport(all_processes):
                     process.set_time(new_time)
                     break
 
-            event.set_time_stamp(new_time)
-
         else:
             for process in all_processes:
                 if event in process.events:
@@ -69,8 +64,8 @@ def lamport(all_processes):
                 if event in process.events:
                     process.set_time(new_time)
 
-            event.set_time_stamp(new_time)
+        event.set_time_stamp(new_time)
 
     for event in new_events:
-        print(str(event.name) + " " + str(event.order) + " " + str(event.time_stamp))
+        print(f"{str(event.name)} {str(event.order)} {str(event.time_stamp)}")
 lamport([p1,p2,p3])
